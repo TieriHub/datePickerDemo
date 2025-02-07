@@ -50,35 +50,19 @@
     JFCustomWidget.subscribe("ready", function(formId, value) {
       
       // Imposta il titolo: utilizza il parametro "QuestionLabel" se disponibile, altrimenti usa il valore predefinito
-      var label = JFCustomWidget.getWidgetSetting('QuestionLabel') || 'Seleziona una data per l\'appuntamento';
+      let label = JFCustomWidget.getWidgetSetting('QuestionLabel') || 'Seleziona una data per l\'appuntamento';
       document.getElementById('header').innerHTML = label;
       
       // Recupera il parametro "AllowedDates" (atteso come stringa separata da virgole, nel formato gg/mm/yy)
-      var allowedDatesParam = JFCustomWidget.getWidgetSetting('AllowedDates');
-      var allowedDates = [];
-      
-      if (allowedDatesParam) {
-        allowedDates = allowedDatesParam.split(',').map(function(dateStr) {
-          dateStr = dateStr.trim();
-          var parsedDate;
-          try {
-            // Tenta di interpretare la data con il formato gg/mm/yy
-            parsedDate = $.datepicker.parseDate('dd/mm/yy', dateStr);
-          } catch (e) {
-            parsedDate = null;
-          }
-          return parsedDate;
-        }).filter(function(d) { return d !== null; });
-      }
+      let allowedDatesParam = JFCustomWidget.getWidgetSetting('AllowedDates')
       
       // Inizializza il Datepicker di jQuery UI con il formato gg/mm/yy
       $("#datepicker").datepicker({
-        dateFormat: 'dd/mm/yy',
+        dateFormat: 'dd/mm/yyyy',
         beforeShowDay: function(date) {
           // Verifica se la data corrente è tra quelle consentite
-          var allowed = allowedDates.some(function(allowedDate) {
-            return isSameDate(date, allowedDate);
-          });
+          let allowed = isSameDate(date, allowedDate);
+
           if (allowed) {
             return [true, "available-day", "Disponibile"];
           }
