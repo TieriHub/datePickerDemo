@@ -13,20 +13,5 @@
         "default": []
       }
     },
-    "scripts": ["https://cdn.jsdelivr.net/gh/TieriHub/datePickerDemo/js/widget.js"],
-    "settings": {
-        "title": "Booking Settings",
-        "elements": [
-            {
-                "type": "button",
-                "label": "Add Date",
-                "name": "addDateButton"
-            },
-            {
-                "type": "text",
-                "label": "Available Dates",
-                "name": "AllowedDates"
-            }
-        ]
-    }
+    "scripts": ["https://cdn.jsdelivr.net/gh/TieriHub/datePickerDemo/js/widget.js"]
   }
