@@ -16,9 +16,9 @@
       }
     },
     "settings": {
-      "html": "/settings/settings.html",
-      "js": "/settings/settings.js",
-      "css": "/settings.css"
+      "html": "settings.html",
+      "js": "/js/settings.js",
+      "css": "/style/setting.css"
     }
   }
   
