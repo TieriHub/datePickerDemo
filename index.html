@@ -58,7 +58,7 @@
       // Recupera il parametro "AllowedDates" (atteso come stringa separata da virgole, nel formato gg/mm/yy)
       let allowedDate = JFCustomWidget.getWidgetSetting('AllowedDates');
       $.datepicker.formatDate('dd/mm/yy',allowedDate);
-      document.getElementById('casocaso').innerText = allowedDate;
+      document.getElementById('casocaso').innerText = typeof allowedDate;
       
       // Inizializza il Datepicker di jQuery UI con il formato gg/mm/yy
       $("#datepicker").datepicker({
