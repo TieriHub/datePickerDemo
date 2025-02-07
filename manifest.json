@@ -1,9 +1,0 @@
-{
-    "name": "Booking Widget",
-    "description": "Custom booking widget for date selection",
-    "version": "1.0",
-    "iframe": {
-      "width": 500,
-      "height": 400
-    }
-  }
