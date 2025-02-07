@@ -1,0 +1,24 @@
+{
+    "name": "Booking Widget",
+    "description": "Custom booking widget for date selection",
+    "version": "1.0",
+    "js": "widget.js",  
+    "css": "settings.css",
+    "iframe": {
+      "width": 500,
+      "height": 400
+    },
+    "properties": {
+      "AllowedDates": {
+        "type": "array",
+        "title": "Available Dates",
+        "default": []
+      }
+    },
+    "settings": {
+      "html": "settings.html",
+      "js": "settings.js",
+      "css": "settings.css"
+    }
+  }
+  
