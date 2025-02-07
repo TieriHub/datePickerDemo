@@ -10,6 +10,21 @@ function isSameDate(date1, date2) {
     // Imposta il titolo: utilizza il parametro "QuestionLabel" se disponibile, altrimenti usa il valore predefinito
     let label = JFCustomWidget.getWidgetSetting('QuestionLabel') || 'Seleziona una data per l\'appuntamento';
     document.getElementById('header').innerHTML = label;
+
+    let settings = JFCustomWidget.getWidgetSettings();
+
+    // Get the text input field (JotForm will generate it from manifest.json)
+    let inputField = document.querySelector("[name='AllowedDates']");
+
+    // Set value from previous settings
+    if (settings.AllowedDates) {
+        inputField.value = settings.AllowedDates;
+    }
+
+    // Add Event Listener to the Button (Generated from manifest.json)
+    document.querySelector("[name='addDateButton']").addEventListener("click", function () {
+        alert("Button clicked!"); // Test if the button is working
+    });
     
     // Recupera il parametro "AllowedDates" (atteso come stringa separata da virgole, nel formato gg/mm/yy)
     let allowedDate = JFCustomWidget.getWidgetSetting('AllowedDates');
