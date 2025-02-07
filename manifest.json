@@ -13,7 +13,7 @@
         "default": []
       }
     },
-    "scripts": ["https://cdn.jsdelivr.net/gh/TieriHub/datePickerDemo/js/widget.js"],
+    "scripts": ["https://cdn.jsdelivr.net/gh/TieriHub/datePickerDemo/js/settings.js"],
     "settings": {
         "title": "Booking Settings",
         "elements": [
