@@ -57,16 +57,14 @@
       
       // Recupera il parametro "AllowedDates" (atteso come stringa separata da virgole, nel formato gg/mm/yy)
       let allowedDate = JFCustomWidget.getWidgetSetting('AllowedDates');
-      console.log(allowedDate);
-      console.log(typeof allowedDate);
-      document.getElementById('casocaso').innerText = allowedDate;
+      let allowedDateObj = new Date(allowedDate);
       
       // Inizializza il Datepicker di jQuery UI con il formato gg/mm/yy
       $("#datepicker").datepicker({
         dateFormat: 'dd/mm/yy',
         beforeShowDay: function(date) {
           // Verifica se la data corrente è tra quelle consentite
-       let allowed = isSameDate(date, date);
+       let allowed = isSameDate(date, allowedDateObj);
 
          if (allowed) {
            return [true, "available-day", "Disponibile"];
