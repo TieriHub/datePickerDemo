@@ -2,8 +2,6 @@
     "name": "Booking Widget",
     "description": "Custom booking widget for date selection",
     "version": "1.0",
-    "js": "widget.js",  
-    "css": "/style/setting.css",
     "iframe": {
       "width": 500,
       "height": 400
