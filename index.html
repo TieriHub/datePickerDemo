@@ -61,7 +61,7 @@
       
       // Inizializza il Datepicker di jQuery UI con il formato gg/mm/yy
       $("#datepicker").datepicker({
-        dateFormat: 'dd/mm/yyyy',
+        dateFormat: 'dd/mm/yy',
         beforeShowDay: function(date) {
           // Verifica se la data corrente è tra quelle consentite
           let allowed = isSameDate(date, allowedDate);
