@@ -15,10 +15,11 @@
         "default": []
       }
     },
+    "scripts": ["https://cdn.jsdelivr.net/gh/TieriHub/datePickerDemo/js/widget.js"],
+    "styles": ["https://cdn.jsdelivr.net/gh/TieriHub/datePickerDemo/style/widget.css"],
     "settings": {
-      "html": "settings.html",
-      "js": "/js/settings.js",
-      "css": "/style/setting.css"
+      "html": "https://cdn.jsdelivr.net/gh/TieriHub/datePickerDemo/settings.html",
+      "js": "https://cdn.jsdelivr.net/gh/TieriHub/datePickerDemo/js/settings.js",
+      "css": "https://cdn.jsdelivr.net/gh/TieriHub/datePickerDemo/style/setting.css"
     }
   }
-  
