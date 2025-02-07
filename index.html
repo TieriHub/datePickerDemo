@@ -14,7 +14,25 @@
   <!-- Carica la libreria Widget  -->
   <script src="https://cdn.jsdelivr.net/gh/TieriHub/datePickerDemo/js/widget.js"></script>
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/TieriHub/datePickerDemo/style/widget.css">
+  <style>
+    /* Stili per distinguere giorni disponibili e non disponibili */
+    .available-day a {
+      background-color: #DFF0D8 !important;
+      color: #3C763D !important;
+    }
+    .unavailable-day a {
+      background-color: #F2DEDE !important;
+      color: #A94442 !important;
+    }
+    /* Stili di base */
+    #main {
+      padding: 10px;
+      font-family: Arial, sans-serif;
+    }
+    #header {
+      margin-bottom: 10px;
+    }
+  </style>
 
 </head>
 <body>
