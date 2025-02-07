@@ -2,17 +2,17 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Appointment Date Widget</title>
-  <!-- Load jQuery and jQuery UI (ensure these libraries are available) -->
+  <title>Widget per Data di Appuntamento</title>
+  <!-- Carica jQuery e jQuery UI -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css" />
   
-  <!-- Load the JotForm Custom Widget API (will only load if used inside JotForm) -->
+  <!-- Carica la libreria JotForm Custom Widget API -->
   <script src="//js.jotform.com/JotFormCustomWidget.min.js"></script>
   
   <style>
-    /* Optional styling to visually differentiate available/unavailable dates */
+    /* Stili per distinguere giorni disponibili e non disponibili */
     .available-day a {
       background-color: #DFF0D8 !important;
       color: #3C763D !important;
@@ -21,7 +21,7 @@
       background-color: #F2DEDE !important;
       color: #A94442 !important;
     }
-    /* Basic layout styling */
+    /* Stili di base */
     #main {
       padding: 10px;
       font-family: Arial, sans-serif;
@@ -33,120 +33,86 @@
 </head>
 <body>
   <div id="main">
-    <h3 id="header">Select an Appointment Date</h3>
-    <!-- The datepicker will be rendered here -->
+    <h3 id="header">Seleziona una data per l'appuntamento</h3>
+    <!-- Qui verrà visualizzato il Datepicker -->
     <div id="datepicker"></div>
   </div>
   
   <script type="text/javascript">
-    // Helper function: Compare two Date objects (ignoring time)
+    // Funzione di supporto per confrontare due Date (ignorando l'orario)
     function isSameDate(date1, date2) {
       return date1.getFullYear() === date2.getFullYear() &&
              date1.getMonth() === date2.getMonth() &&
              date1.getDate() === date2.getDate();
     }
-
-    // The main initialization function for our widget.
-    // 'value' is the previously selected date (if any), as passed by the JotForm API.
-    function initializeWidget(value) {
-      // Use widget setting 'QuestionLabel' if available, otherwise use a default title.
-      var label = 'Select an Appointment Date';
-      if (window.JFCustomWidget && typeof JFCustomWidget.getWidgetSetting === "function") {
-        label = JFCustomWidget.getWidgetSetting('QuestionLabel') || label;
-      }
+    
+    // Sottoscrizione all'evento "ready" fornito dall'API di JotForm
+    JFCustomWidget.subscribe("ready", function(formId, value) {
+      
+      // Imposta il titolo: utilizza il parametro "QuestionLabel" se disponibile, altrimenti usa il valore predefinito
+      var label = JFCustomWidget.getWidgetSetting('QuestionLabel') || 'Seleziona una data per l\'appuntamento';
       document.getElementById('header').innerHTML = label;
       
-      // Read the AllowedDates setting (expected as a comma-separated list of dates)
-      var allowedDatesParam = null;
-      if (window.JFCustomWidget && typeof JFCustomWidget.getWidgetSetting === "function") {
-        allowedDatesParam = JFCustomWidget.getWidgetSetting('AllowedDates');
-      }
-      
+      // Recupera il parametro "AllowedDates" (atteso come stringa separata da virgole, nel formato gg/mm/yy)
+      var allowedDatesParam = JFCustomWidget.getWidgetSetting('AllowedDates');
       var allowedDates = [];
+      
       if (allowedDatesParam) {
         allowedDates = allowedDatesParam.split(',').map(function(dateStr) {
           dateStr = dateStr.trim();
           var parsedDate;
           try {
-            // Try parsing with format mm/dd/yy
-            parsedDate = $.datepicker.parseDate('mm/dd/yy', dateStr);
+            // Tenta di interpretare la data con il formato gg/mm/yy
+            parsedDate = $.datepicker.parseDate('dd/mm/yy', dateStr);
           } catch (e) {
-            try {
-              // If that fails, try mm/dd/yyyy
-              parsedDate = $.datepicker.parseDate('mm/dd/yyyy', dateStr);
-            } catch (e2) {
-              parsedDate = null;
-            }
+            parsedDate = null;
           }
           return parsedDate;
         }).filter(function(d) { return d !== null; });
       }
       
-      // If no valid allowed dates are provided, use a default set.
-      if (!allowedDates.length) {
-        allowedDates = [
-          new Date(2025, 2, 3),   // March 3, 2025 (months are zero-indexed)
-          new Date(2025, 2, 10),  // March 10, 2025
-          new Date(2025, 2, 15)   // March 15, 2025
-        ];
-      }
-      
-      // Initialize the jQuery UI Datepicker.
+      // Inizializza il Datepicker di jQuery UI con il formato gg/mm/yy
       $("#datepicker").datepicker({
-        dateFormat: 'mm/dd/yy',
+        dateFormat: 'dd/mm/yy',
         beforeShowDay: function(date) {
-          // Enable only if this date is in the allowedDates array.
+          // Verifica se la data corrente è tra quelle consentite
           var allowed = allowedDates.some(function(allowedDate) {
             return isSameDate(date, allowedDate);
           });
           if (allowed) {
-            return [true, "available-day", "Available"];
+            return [true, "available-day", "Disponibile"];
           }
-          return [false, "unavailable-day", "Unavailable"];
+          return [false, "unavailable-day", "Non disponibile"];
         },
         onSelect: function(dateText, inst) {
-          console.log("Date selected: " + dateText);
+          console.log("Data selezionata: " + dateText);
         }
       });
       
-      // If a previously selected date exists (e.g., when editing a submission), preselect it.
+      // Se esiste un valore pre-esistente (ad esempio, in fase di modifica), lo pre-seleziona
       if (value) {
         try {
-          var preselectedDate = $.datepicker.parseDate('mm/dd/yy', value);
+          var preselectedDate = $.datepicker.parseDate('dd/mm/yy', value);
           $("#datepicker").datepicker("setDate", preselectedDate);
         } catch (e) {
-          console.warn("Could not parse the preselected date:", value);
+          console.warn("Impossibile analizzare la data pre-selezionata:", value);
         }
       }
       
-      // (Optional) Resize the widget's iframe if needed.
-      if (window.JFCustomWidget && typeof JFCustomWidget.requestFrameResize === "function") {
-        JFCustomWidget.requestFrameResize({ height: document.body.scrollHeight });
-      }
-    }
+      // (Opzionale) Ridimensiona l'iframe se necessario
+      // JFCustomWidget.requestFrameResize({ height: document.body.scrollHeight });
+    });
     
-    // If the JotForm widget API is available, use it; otherwise, fall back to standalone initialization.
-    if (window.JFCustomWidget && typeof JFCustomWidget.subscribe === "function") {
-      JFCustomWidget.subscribe("ready", function(formId, value) {
-        initializeWidget(value);
-      });
-      
-      JFCustomWidget.subscribe("submit", function() {
-        var selectedDate = $("#datepicker").datepicker("getDate");
-        if (!selectedDate) {
-          JFCustomWidget.sendSubmit({ valid: false, value: "" });
-        } else {
-          var formattedDate = $.datepicker.formatDate('mm/dd/yy', selectedDate);
-          JFCustomWidget.sendSubmit({ valid: true, value: formattedDate });
-        }
-      });
-    } else {
-      // Standalone testing fallback: initialize when the document is ready.
-      $(document).ready(function(){
-        initializeWidget("");
-      });
-    }
+    // Sottoscrizione all'evento "submit" per inviare il valore selezionato a JotForm
+    JFCustomWidget.subscribe("submit", function() {
+      var selectedDate = $("#datepicker").datepicker("getDate");
+      if (!selectedDate) {
+        JFCustomWidget.sendSubmit({ valid: false, value: "" });
+      } else {
+        var formattedDate = $.datepicker.formatDate('dd/mm/yy', selectedDate);
+        JFCustomWidget.sendSubmit({ valid: true, value: formattedDate });
+      }
+    });
   </script>
 </body>
 </html>
-
