@@ -14,7 +14,6 @@
       }
     },
     "scripts": ["https://cdn.jsdelivr.net/gh/TieriHub/datePickerDemo/js/widget.js"],
-    "styles": ["https://cdn.jsdelivr.net/gh/TieriHub/datePickerDemo/style/widget.css"],
     "settings": {
         "title": "Booking Settings",
         "elements": [
