@@ -3,7 +3,7 @@
     "description": "Custom booking widget for date selection",
     "version": "1.0",
     "js": "widget.js",  
-    "css": "settings.css",
+    "css": "/style/setting.css",
     "iframe": {
       "width": 500,
       "height": 400
@@ -16,9 +16,9 @@
       }
     },
     "settings": {
-      "html": "settings.html",
-      "js": "settings.js",
-      "css": "settings.css"
+      "html": "/settings/settings.html",
+      "js": "/settings/settings.js",
+      "css": "/settings.css"
     }
   }
   
