@@ -5,13 +5,5 @@
     "iframe": {
       "width": 500,
       "height": 400
-    },
-    "properties": {
-      "AllowedDates": {
-        "type": "array",
-        "title": "Available Dates",
-        "default": []
-      }
-    },
-    "scripts": ["https://cdn.jsdelivr.net/gh/TieriHub/datePickerDemo/js/widget.js"]
+    }
   }
