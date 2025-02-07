@@ -66,11 +66,11 @@
         dateFormat: 'dd/mm/yy',
         beforeShowDay: function(date) {
           // Verifica se la data corrente è tra quelle consentite
-       //   let allowed = isSameDate(date, allowedDate);
+       let allowed = isSameDate(date, date);
 
-         // if (allowed) {
-           // return [true, "available-day", "Disponibile"];
-         // }
+         if (allowed) {
+           return [true, "available-day", "Disponibile"];
+         }
           return [false, "unavailable-day", "Non disponibile"];
         },
         onSelect: function(dateText, inst) {
