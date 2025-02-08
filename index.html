@@ -49,7 +49,7 @@
              date1.getDate() === date2.getDate();
     }
     
-    JFCustomWidget.onSettingsLoaded = function() {
+    JFCustomWidget.subscribe("canghe",  function() {
       console.log("ciao");
         this.addSetting({
             name: 'allowedDates',
@@ -58,8 +58,7 @@
             description: 'Comma-separated list of allowed dates in yyyy-mm-dd format.',
             value: ''
         });
-    };
-
+    })  
 
 
     // Sottoscrizione all'evento "ready" fornito dall'API di JotForm
