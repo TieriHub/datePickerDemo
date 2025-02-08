@@ -78,17 +78,20 @@
       const questionLabel = document.getElementById('questionLabel').value;
       const allowedDates = Array.from(document.getElementsByName('allowedDates')).map(input => input.value);
 
-      // Save settings to local storage or send them to your backend service
-      localStorage.setItem('questionLabel', questionLabel);
-      localStorage.setItem('allowedDates', allowedDates.join(','));
+      // Emit settings to JotForm
+      const settings = {
+        QuestionLabel: questionLabel,
+        AllowedDates: allowedDates.join(',')
+      };
+      JFCustomWidget.sendMessage(settings);
 
       alert('Settings saved successfully!');
     });
 
-    // Load settings from local storage
-    window.onload = function() {
-      const questionLabel = localStorage.getItem('questionLabel');
-      const allowedDates = localStorage.getItem('allowedDates');
+    // Load settings from JotForm
+    JFCustomWidget.subscribe('ready', function() {
+      const questionLabel = JFCustomWidget.getWidgetSetting('QuestionLabel');
+      const allowedDates = JFCustomWidget.getWidgetSetting('AllowedDates');
 
       if (questionLabel) {
         document.getElementById('questionLabel').value = questionLabel;
@@ -105,7 +108,7 @@
           container.appendChild(dateField);
         });
       }
-    }
+    });
   </script>
 
 </body>
