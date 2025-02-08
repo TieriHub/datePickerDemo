@@ -78,7 +78,8 @@
         dateFormat: 'dd/mm/yy',
         beforeShowDay: function(date) {
           // Verifica se la data corrente è tra quelle consentite
-          let allowed = allowedDates.some(allowedDate => isSameDate(date, allowedDate));
+          //let allowed = allowedDates.some(allowedDate => isSameDate(date, allowedDate));
+          let allowed = new Date(allowedDatesSetting);
 
           if (allowed) {
             return [true, "available-day", "Disponibile"];
