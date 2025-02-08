@@ -1,24 +1,26 @@
 (function() {
     function init() {
-        // Get the settings container
-        const settingsContainer = JFCustomWidget.getSettingsContainer();
+        // Create the settings form dynamically
+        const container = document.createElement("div");
 
-        // Create elements
         const title = document.createElement("h3");
         title.textContent = "Widget Settings";
 
         const input = document.createElement("input");
         input.type = "text";
         input.id = "customInput";
+        input.placeholder = "Enter a value";
 
         const saveButton = document.createElement("button");
         saveButton.textContent = "Save";
         saveButton.onclick = saveSettings;
 
         // Append elements
-        settingsContainer.appendChild(title);
-        settingsContainer.appendChild(input);
-        settingsContainer.appendChild(saveButton);
+        container.appendChild(title);
+        container.appendChild(input);
+        container.appendChild(saveButton);
+
+        document.body.appendChild(container);
 
         // Load existing settings if available
         loadSettings();
@@ -33,7 +35,7 @@
 
     function loadSettings() {
         JFCustomWidget.getWidgetSettings((settings) => {
-            if (settings.customProperty) {
+            if (settings && settings.customProperty) {
                 document.getElementById("customInput").value = settings.customProperty;
             }
         });
