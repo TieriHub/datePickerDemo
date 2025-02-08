@@ -56,7 +56,7 @@
       document.getElementById('header').innerHTML = label;
 
       // Recupera il parametro "AllowedDates" (atteso come stringa separata da virgole, nel formato yyyy-mm-dd)
-      let allowedDatesSetting = JFCustomWidget.getWidgetSetting();
+      let allowedDatesSetting = JFCustomWidget.getWidgetSetting('AllowedDates');
       let allowedDates = allowedDatesSetting ? allowedDatesSetting.split(',').map(dateStr => new Date(dateStr.trim())) : [];
       
       // Inizializza il Datepicker di jQuery UI con il formato dd/mm/yy
