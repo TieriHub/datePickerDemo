@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Impostazioni del Widget</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    input[type="text"], input[type="date"] {
+      width: calc(100% - 22px);
+      padding: 8px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .date-field {
+      display: flex;
+      align-items: center;
+    }
+    .date-field button {
+      margin-left: 10px;
+      background-color: #f44336;
+    }
+    .date-field button:hover {
+      background-color: #e53935;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Impostazioni del Widget</h2>
+
+  <form id="settings-form">
+    <label for="questionLabel">Question Label:</label>
+    <input type="text" id="questionLabel" name="questionLabel" placeholder="Enter the question label">
+
+    <label for="allowedDates">Allowed Dates:</label>
+    <div id="allowedDatesContainer"></div>
+    <button type="button" id="addDateButton">Add Date</button>
+
+    <button type="submit">Save Settings</button>
+  </form>
+
+  <script>
+    document.getElementById('addDateButton').addEventListener('click', function() {
+      const container = document.getElementById('allowedDatesContainer');
+      const dateField = document.createElement('div');
+      dateField.className = 'date-field';
+      dateField.innerHTML = `
+        <input type="date" name="allowedDates">
+        <button type="button" onclick="removeDateField(this)">Remove</button>
+      `;
+      container.appendChild(dateField);
+    });
+
+    function removeDateField(button) {
+      button.parentElement.remove();
+    }
+
+    document.getElementById('settings-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const questionLabel = document.getElementById('questionLabel').value;
+      const allowedDates = Array.from(document.getElementsByName('allowedDates')).map(input => input.value);
+
+      // Save settings to local storage or send them to your backend service
+      localStorage.setItem('questionLabel', questionLabel);
+      localStorage.setItem('allowedDates', allowedDates.join(','));
+
+      alert('Settings saved successfully!');
+    });
+
+    // Load settings from local storage
+    window.onload = function() {
+      const questionLabel = localStorage.getItem('questionLabel');
+      const allowedDates = localStorage.getItem('allowedDates');
+
+      if (questionLabel) {
+        document.getElementById('questionLabel').value = questionLabel;
+      }
+      if (allowedDates) {
+        allowedDates.split(',').forEach(date => {
+          const container = document.getElementById('allowedDatesContainer');
+          const dateField = document.createElement('div');
+          dateField.className = 'date-field';
+          dateField.innerHTML = `
+            <input type="date" name="allowedDates" value="${date}">
+            <button type="button" onclick="removeDateField(this)">Remove</button>
+          `;
+          container.appendChild(dateField);
+        });
+      }
+    }
+  </script>
+
+</body>
+</html>
