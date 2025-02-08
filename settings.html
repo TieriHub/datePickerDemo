@@ -6,21 +6,16 @@
       <input type="Date" id="AllowedDates2" name="questionLabel">
       <input type="Date" id="AllowedDates3" name="questionLabel">
       <input type="button" id="addDateButton" value="+" >
-      <label for="allowedDates">Allowed Dates:</label>
-      <div id="allowedDatesContainer"></div>
     </div>
 
 
   <script>
     document.getElementById('addDateButton').addEventListener('click', function() {
       const container = document.getElementById('allowedDatesContainer');
-      const dateField = document.createElement('div');
-      dateField.className = 'date-field';
-      dateField.innerHTML = `
+      document.innerHTML += `
         <input type="date" name="allowedDates">
-        <button type="button" onclick="removeDateField(this)">Remove</button>
+        <input type="button" onclick="removeDateField(this)" value="-">
       `;
-      container.appendChild(dateField);
     });
 
     function removeDateField(button) {
