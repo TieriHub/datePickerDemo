@@ -48,7 +48,13 @@
              date1.getMonth() === date2.getMonth() &&
              date1.getDate() === date2.getDate();
     }
-
+    
+    JFCustomWidget.addParameter({
+    type: "text",
+    label: "Nome del Parametro",
+    description: "Descrizione del parametro",
+    value: "Valore predefinito"
+});
 
 
     // Sottoscrizione all'evento "ready" fornito dall'API di JotForm
@@ -57,12 +63,7 @@
       let label = JFCustomWidget.getWidgetSetting('QuestionLabel') || 'Seleziona una data per l\'appuntamento';
       document.getElementById('header').innerHTML = label;
 
-      JFCustomWidget.addParameter({
-    type: "text",
-    label: "Nome del Parametro",
-    description: "Descrizione del parametro",
-    value: "Valore predefinito"
-});
+
 
       // Recupera il parametro "AllowedDates" (atteso come stringa separata da virgole, nel formato yyyy-mm-dd)
       let allowedDatesSetting = JFCustomWidget.getWidgetSetting('AllowedDates');
