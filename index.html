@@ -49,12 +49,16 @@
              date1.getDate() === date2.getDate();
     }
     
-    JFCustomWidget.addParameter({
-    type: "text",
-    label: "Nome del Parametro",
-    description: "Descrizione del parametro",
-    value: "Valore predefinito"
-});
+    JFCustomWidget.onSettingsLoaded = function() {
+    this.addSetting({
+        name: 'allowedDates',
+        type: 'text',
+        label: 'Allowed Dates',
+        description: 'Comma-separated list of allowed dates in yyyy-mm-dd format.',
+        value: ''
+    });
+};
+
 
 
     // Sottoscrizione all'evento "ready" fornito dall'API di JotForm
