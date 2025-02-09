@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Date Input Example</title>
 </head>
-<body style="">
+<body>
 
     <div class="line">
         <input type="date" id="AllowedDates" name="questionLabel">
@@ -22,63 +22,47 @@
     <iframe id="view" style="width: 100%; height: 500px;"></iframe>
 
     <script>
-        JFCustomWidgetUtils.domReady(function () {
-            class ParameterFrame {
-                params;
-                iframe = document.querySelector("#view");
-                srcFields;
-                dateFields = ['AllowedDates', 'AllowedDates1', 'AllowedDates2'];
-
-                constructor() {
-                    this.params = JFCustomWidget.getWidgetSettings();
-                    this.srcFields = this.params.URL.match(/[^{\}]+(?=})/g);
-                    this.updateFrame();
-                    if (this.srcFields) {
-                        this.srcFields.forEach((n) => {
-                            JFCustomWidget.listenFromField(n, "change", (res) => {
-                                this.updateFrame();
-                            });
-                        });
-                    }
-                    this.dateFields.forEach((field) => {
-                        document.getElementById(field).addEventListener('change', this.updateFrame);
-                    });
-                }
-
-                updateFrame = () => {
-                    if (this.srcFields) {
-                        let srcIDs = this.srcFields.map((n) => n.split("_")[1]);
-                        JFCustomWidget.getFieldsValueById(srcIDs, (res) => {
-                            let prefills = res.data.map((n) => n.value);
-                            let i = 0;
-                            let fullURL = this.params.URL;
-                            prefills.forEach((n) => {
-                                fullURL = fullURL.replace(`{${this.srcFields[i]}}`, n);
-                                i++;
-                            });
-
-                            // Add date parameters to the URL
-                            const url = new URL(fullURL);
-                            const params = url.searchParams;
-                            this.dateFields.forEach((field) => {
-                                const dateValue = document.getElementById(field).value;
-                                if (dateValue) {
-                                    params.set(field, dateValue);
-                                }
-                            });
-                            fullURL = url.toString();
-
-                            this.iframe.setAttribute("src", fullURL);
-                        });
-                    } else {
-                        this.iframe.setAttribute("src", this.params.URL);
-                    }
+        class ParameterFrame {
+            constructor() {
+                this.iframe = document.querySelector("#view");
+                this.dateFields = ['AllowedDates', 'AllowedDates1', 'AllowedDates2'];
+                
+                this.params = {
+                    URL: "https://example.com" // Change to your actual URL
                 };
+
+                // Bind updateFrame to retain 'this' reference
+                this.updateFrame = this.updateFrame.bind(this);
+
+                // Attach event listeners
+                this.dateFields.forEach((field) => {
+                    document.getElementById(field).addEventListener('change', this.updateFrame);
+                });
+
+                // Update iframe initially
+                this.updateFrame();
             }
 
-            JFCustomWidget.subscribe("ready", function (data) {
-                var widget = new ParameterFrame(data);
-            });
+            updateFrame() {
+                let url = new URL(this.params.URL);
+                let params = url.searchParams;
+
+                // Get values from input fields and add to URL
+                this.dateFields.forEach((field) => {
+                    const dateValue = document.getElementById(field).value;
+                    if (dateValue) {
+                        params.set(field, dateValue);
+                    }
+                });
+
+                // Set the iframe src
+                this.iframe.setAttribute("src", url.toString());
+            }
+        }
+
+        // Run after the page loads
+        document.addEventListener("DOMContentLoaded", function () {
+            new ParameterFrame();
         });
     </script>
 
