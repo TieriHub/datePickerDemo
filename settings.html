@@ -30,55 +30,61 @@
 
 
   <script>
-    document.getElementById('addDateButton').addEventListener('click', function() {
-      const container = document.getElementById('allowedDatesContainer');
-      document.innerHTML += `
-        <input type="date" name="allowedDates">
-        <input type="button" onclick="removeDateField(this)" value="-">
-      `;
-    });
+   JFCustomWidgetUtils.domReady(function () {
+  class ParameterFrame {
+    params;
+    iframe = document.querySelector("#view");
+    srcFields;
+    dateFields = ['date1', 'date2'];
 
-    function removeDateField(button) {
-      button.parentElement.remove();
-    }
-
-    document.getElementById('settings-form').addEventListener('submit', function(event) {
-      event.preventDefault();
-
-      const questionLabel = document.getElementById('questionLabel').value;
-      const allowedDates = Array.from(document.getElementsByName('allowedDates')).map(input => input.value);
-
-      // Emit settings to JotForm
-      const settings = {
-        QuestionLabel: questionLabel,
-        AllowedDates: allowedDates.join(',')
-      };
-      JFCustomWidget.sendMessage(settings);
-
-      alert('Settings saved successfully!');
-    });
-
-    // Load settings from JotForm
-    JFCustomWidget.subscribe('ready', function() {
-      const questionLabel = JFCustomWidget.getWidgetSetting('QuestionLabel');
-      const allowedDates = JFCustomWidget.getWidgetSetting('AllowedDates');
-
-      if (questionLabel) {
-        document.getElementById('questionLabel').value = questionLabel;
-      }
-      if (allowedDates) {
-        allowedDates.split(',').forEach(date => {
-          const container = document.getElementById('allowedDatesContainer');
-          const dateField = document.createElement('div');
-          dateField.className = 'date-field';
-          dateField.innerHTML = `
-            <input type="date" name="allowedDates" value="${date}">
-            <button type="button" onclick="removeDateField(this)">Remove</button>
-          `;
-          container.appendChild(dateField);
+    constructor() {
+      this.params = JFCustomWidget.getWidgetSettings();
+      this.srcFields = this.params.URL.match(/[^{\}]+(?=})/g);
+      this.updateFrame();
+      if (this.srcFields) {
+        this.srcFields.forEach((n) => {
+          JFCustomWidget.listenFromField(n, "change", (res) => {
+            this.updateFrame();
+          });
         });
       }
-    });
+    }
+
+    updateFrame = () => {
+      if (this.srcFields) {
+        let srcIDs = this.srcFields.map((n) => n.split("_")[1]);
+        JFCustomWidget.getFieldsValueById(srcIDs, (res) => {
+          let prefills = res.data.map((n) => n.value);
+          let i = 0;
+          let fullURL = this.params.URL;
+          prefills.forEach((n) => {
+            fullURL = fullURL.replace(`{${this.srcFields[i]}}`, n);
+            i++;
+          });
+
+          // Add date parameters to the URL
+          const url = new URL(fullURL);
+          const params = url.searchParams;
+          this.dateFields.forEach((field) => {
+            const dateValue = this.params[field];
+            if (dateValue) {
+              params.set(field, dateValue);
+            }
+          });
+          fullURL = url.toString();
+
+          this.iframe.setAttribute("src", fullURL);
+        });
+      } else {
+        this.iframe.setAttribute("src", this.params.URL);
+      }
+    };
+  }
+
+  JFCustomWidget.subscribe("ready", function (data) {
+    var widget = new ParameterFrame(data);
+  });
+});
   </script>
 
 
