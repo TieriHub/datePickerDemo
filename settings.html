@@ -4,26 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Date Input Example</title>
-    <script src="//js.jotform.com/JotFormCustomWidget.min.js"></script>
+    
+<script src='https://js.jotform.com/JotForm.min.js'></script>
 </head>
 <body>
 
 
 
     <script>
-JFCustomWidget.subscribe("ready", function(data) {
-    var settings = JFCustomWidget.setWidgetSettings('ar');
-    console.log(settings);
+
+JF.fieldMatch({
+    el : $("#match").get()[0],
+    targetFields : [
+    {
+        value : "Datetime",
+        key : "datetime",
+        type : "control_datetime",
+        autoMatch:false,
+        required : true
+    }
+    ],
 
 
-    // Handle form submission
-    JFCustomWidget.subscribe("submit", function() {
-        var msg = {
-            valid: true,
-            value: "Widget data based on settings"
-        };
-        JFCustomWidget.sendSubmit(msg);
-    });
+
+    waitForResources:true,
+
+    callback:function(matches){
+        console.log("matches " , {matches:matches});
+    }
 });
     </script>
 
