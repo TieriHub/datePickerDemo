@@ -12,20 +12,8 @@
     <script>
 JFCustomWidget.subscribe("ready", function(data) {
     var settings = JFCustomWidget.getWidgetSettings();
-    
-    // Use the settings in your widget logic
-    console.log("API Key:", settings.apiKey);
-    console.log("Max Records:", settings.maxRecords);
-    console.log("Default Date:", settings.defaultDate);
+    console.log(settings);
 
-    // Example: Display the settings in the widget
-    var widgetContainer = document.createElement('div');
-    widgetContainer.innerHTML = `
-        <p>API Key: ${settings.apiKey}</p>
-        <p>Max Records: ${settings.maxRecords}</p>
-        <p>Default Date: ${settings.defaultDate}</p>
-    `;
-    document.body.appendChild(widgetContainer);
 
     // Handle form submission
     JFCustomWidget.subscribe("submit", function() {
