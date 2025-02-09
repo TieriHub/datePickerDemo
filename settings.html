@@ -1,82 +1,86 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date Input Example</title>
+</head>
 <body style="">
 
     <div class="line">
-      <input type="Date" id="AllowedDates" name="questionLabel" >
+        <input type="date" id="AllowedDates" name="questionLabel">
     </div>
     <div class="line">
-      <input type="Date" id="AllowedDates1" name="questionLabel">
+        <input type="date" id="AllowedDates1" name="questionLabel">
     </div>
     <div class="line">
-      <input type="Date" id="AllowedDates2" name="questionLabel">
+        <input type="date" id="AllowedDates2" name="questionLabel">
     </div>
-  </div>
 
+    <input type="button" id="addDateButton" value="+" >
 
+    <iframe id="view" style="width: 100%; height: 500px;"></iframe>
 
-  <input type="button" id="addDateButton" value="+" >
+    <script>
+        JFCustomWidgetUtils.domReady(function () {
+            class ParameterFrame {
+                params;
+                iframe = document.querySelector("#view");
+                srcFields;
+                dateFields = ['AllowedDates', 'AllowedDates1', 'AllowedDates2'];
 
+                constructor() {
+                    this.params = JFCustomWidget.getWidgetSettings();
+                    this.srcFields = this.params.URL.match(/[^{\}]+(?=})/g);
+                    this.updateFrame();
+                    if (this.srcFields) {
+                        this.srcFields.forEach((n) => {
+                            JFCustomWidget.listenFromField(n, "change", (res) => {
+                                this.updateFrame();
+                            });
+                        });
+                    }
+                    this.dateFields.forEach((field) => {
+                        document.getElementById(field).addEventListener('change', this.updateFrame);
+                    });
+                }
 
+                updateFrame = () => {
+                    if (this.srcFields) {
+                        let srcIDs = this.srcFields.map((n) => n.split("_")[1]);
+                        JFCustomWidget.getFieldsValueById(srcIDs, (res) => {
+                            let prefills = res.data.map((n) => n.value);
+                            let i = 0;
+                            let fullURL = this.params.URL;
+                            prefills.forEach((n) => {
+                                fullURL = fullURL.replace(`{${this.srcFields[i]}}`, n);
+                                i++;
+                            });
 
-  <script>
-   JFCustomWidgetUtils.domReady(function () {
-  class ParameterFrame {
-    params;
-    iframe = document.querySelector("#view");
-    srcFields;
-    dateFields = ['date1', 'date2'];
+                            // Add date parameters to the URL
+                            const url = new URL(fullURL);
+                            const params = url.searchParams;
+                            this.dateFields.forEach((field) => {
+                                const dateValue = document.getElementById(field).value;
+                                if (dateValue) {
+                                    params.set(field, dateValue);
+                                }
+                            });
+                            fullURL = url.toString();
 
-    constructor() {
-      this.params = JFCustomWidget.getWidgetSettings();
-      this.srcFields = this.params.URL.match(/[^{\}]+(?=})/g);
-      this.updateFrame();
-      if (this.srcFields) {
-        this.srcFields.forEach((n) => {
-          JFCustomWidget.listenFromField(n, "change", (res) => {
-            this.updateFrame();
-          });
-        });
-      }
-    }
-
-    updateFrame = () => {
-      if (this.srcFields) {
-        let srcIDs = this.srcFields.map((n) => n.split("_")[1]);
-        JFCustomWidget.getFieldsValueById(srcIDs, (res) => {
-          let prefills = res.data.map((n) => n.value);
-          let i = 0;
-          let fullURL = this.params.URL;
-          prefills.forEach((n) => {
-            fullURL = fullURL.replace(`{${this.srcFields[i]}}`, n);
-            i++;
-          });
-
-          // Add date parameters to the URL
-          const url = new URL(fullURL);
-          const params = url.searchParams;
-          this.dateFields.forEach((field) => {
-            const dateValue = this.params[field];
-            if (dateValue) {
-              params.set(field, dateValue);
+                            this.iframe.setAttribute("src", fullURL);
+                        });
+                    } else {
+                        this.iframe.setAttribute("src", this.params.URL);
+                    }
+                };
             }
-          });
-          fullURL = url.toString();
 
-          this.iframe.setAttribute("src", fullURL);
+            JFCustomWidget.subscribe("ready", function (data) {
+                var widget = new ParameterFrame(data);
+            });
         });
-      } else {
-        this.iframe.setAttribute("src", this.params.URL);
-      }
-    };
-  }
+    </script>
 
-  JFCustomWidget.subscribe("ready", function (data) {
-    var widget = new ParameterFrame(data);
-  });
-});
-  </script>
-
-
-  
 </body>
-  
+</html>
