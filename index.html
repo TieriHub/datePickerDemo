@@ -35,7 +35,7 @@
 <body>
 
   <div id="main">
-    <h3 id="header">Seleziona una data per l'appuntamento</h3>
+    <h3 id="header">huhuhu</h3>
     <div id="casocaso"></div>
     <!-- Qui verrà visualizzato il Datepicker -->
     <div id="datepicker"></div>
@@ -55,6 +55,8 @@
       // Imposta il titolo: utilizza il parametro "QuestionLabel" se disponibile, altrimenti usa il valore predefinito
       let label = JFCustomWidget.getWidgetSetting('QuestionLabel') || 'Seleziona una data per l\'appuntamento';
       document.getElementById('header').innerHTML = label;
+
+      JFCustomWidget.requestFrameResize({ height: 1200 });
 
 
 
