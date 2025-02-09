@@ -15,7 +15,7 @@
 </head>
 <body>
     <div class="container">
-        <label for="button">hi</label>
+        <label for="button">kk</label>
         <input type="button" value="da">
         <input type="button" value="da">
         <input type="date" name="sans" id="sa">
@@ -32,7 +32,10 @@
 
 
     <script>
-JFCustomWidget.requestFrameResize({ height: 600 });
+        JFCustomWidget.subscribe("ready", function(formId, value) {
+            JFCustomWidget.requestFrameResize({ width: 800, height: 600 });
+
+        })
     </script>
 
 </body>
