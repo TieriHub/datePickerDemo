@@ -6,33 +6,24 @@
     <title>Date Input Example</title>
     
 <script src='https://js.jotform.com/JotForm.min.js'></script>
+
+<style>
+    .container{
+        height: 600px;
+    }
+</style>
 </head>
 <body>
+    <div class="container">
+        <input type="button" value="da">
+        <input type="button" value="da">
+        <input type="date" name="sans" id="sa">
+    </div>
 
 
 
     <script>
 
-JF.fieldMatch({
-    el : $("#match").get()[0],
-    targetFields : [
-    {
-        value : "Datetime",
-        key : "datetime",
-        type : "control_datetime",
-        autoMatch:false,
-        required : true
-    }
-    ],
-
-
-
-    waitForResources:true,
-
-    callback:function(matches){
-        console.log("matches " , {matches:matches});
-    }
-});
     </script>
 
 </body>
