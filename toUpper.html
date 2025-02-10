@@ -9,20 +9,19 @@
 <body>
 
     <script type="text/javascript">
+        var text = ""; // Declare globally
 
         JFCustomWidget.subscribe("ready", function(formId, value) {
-          var text = JFCustomWidget.getWidgetSetting('textInput');
-          text = toUpperCase(text);
-
-          }
-        );
+            text = JFCustomWidget.getWidgetSetting('textInput');
+            if (text) {
+                text = text.toUpperCase(); // Corrected method call
+            }
+        });
 
         JFCustomWidget.subscribe("submit", function() {
             JFCustomWidget.sendSubmit({ valid: true, value: text });
-          }
-        );
-        
-      </script>
+        });
+    </script>
     
 </body>
 </html>
