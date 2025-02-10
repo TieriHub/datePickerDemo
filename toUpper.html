@@ -7,15 +7,21 @@
     <script src="//js.jotform.com/JotFormCustomWidget.min.js"></script>
 </head>
 <body>
-    <input type="text" name="toUpper" id="toUpper" style="text-transform: capitalize;">
 
     <script type="text/javascript">
-        // Sottoscrizione all'evento "submit" per inviare il valore selezionato a JotForm
-        JFCustomWidget.subscribe("submit", function() {
-            let upperText = document.getElementById('toUpper').value;
-            JFCustomWidget.sendSubmit({ valid: true, value: upperText });
+
+        JFCustomWidget.subscribe("ready", function(formId, value) {
+          var text = JFCustomWidget.getWidgetSetting('textInput');
+          text = toUpperCase(text);
+
           }
         );
+
+        JFCustomWidget.subscribe("submit", function() {
+            JFCustomWidget.sendSubmit({ valid: true, value: text });
+          }
+        );
+        
       </script>
     
 </body>
