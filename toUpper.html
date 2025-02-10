@@ -12,6 +12,7 @@
 
 
     <script type="text/javascript">
+      JFCustomWidget.subscribe("ready", function(){
         const maskPattern = "@@@@@@##@##@###@"; // Define your mask
 
         function applyMask(value) {
@@ -51,14 +52,14 @@
             this.value = applyMask(this.value);
         });
 
-        JFCustomWidget.subscribe("ready", function() {
+        JFCustomWidget.subscribe("submit", function() {
                
-          document.getElementById("submitBtn").addEventListener("click", function() {
           let text = document.getElementById("textInput").value;
           JFCustomWidget.sendSubmit({ valid: true, value: text });
 
         });
-        });
+      });
+      
     </script>
     
 </body>
