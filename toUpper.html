@@ -8,10 +8,51 @@
 </head>
 <body>
 
-    <input type="text" id="textInput" placeholder="Inserisci Codice Fiscale" maxlength="16" />
+    <input type="text" id="textInput" placeholder="Inserisci Codice Fiscale" maxlength="16" style="text-transform: uppercase;" />
 
 
     <script type="text/javascript">
+
+       const maskPattern = "@@@@@@##@##@###@"; // Define your mask
+
+      function enforceMask(inputValue) {
+          let maskedValue = "";
+          let valueIndex = 0;
+
+          for (let i = 0; i < maskPattern.length; i++) {
+              if (valueIndex >= inputValue.length) break;
+
+              let currentChar = inputValue[valueIndex];
+
+              if (maskPattern[i] === "@") {
+                  // Allow only letters
+                  if (/[A-Za-z]/.test(currentChar)) {
+                      maskedValue += currentChar.toUpperCase();
+                      valueIndex++;
+                  } else {
+                      continue; // Skip invalid input
+                  }
+              } else if (maskPattern[i] === "#") {
+                  // Allow only numbers
+                  if (/[0-9]/.test(currentChar)) {
+                      maskedValue += currentChar;
+                      valueIndex++;
+                  } else {
+                      continue; // Skip invalid input
+                  }
+              } else {
+                  // Fixed characters in the mask (if any)
+                  maskedValue += maskPattern[i];
+              }
+          }
+
+          return maskedValue;
+      }
+
+      document.getElementById("textInput").addEventListener("input", function(event) {
+          let rawValue = this.value.replace(/[^A-Za-z0-9]/g, ''); // Remove any unwanted characters
+          this.value = enforceMask(rawValue);
+      });
 
       JFCustomWidget.subscribe("ready", function(){
 
