@@ -8,41 +8,38 @@
 </head>
 <body>
 
-    <input type="text" id="textInput" placeholder="Inserisci Codice Fiscale" maxlength="16" style="text-transform: uppercase;" />
+    <input type="text" id="textInput" placeholder="Inserisci Codice Fiscale" maxlength="16"  />
 
 
     <script type="text/javascript">
 
        const maskPattern = "@@@@@@##@##@###@"; // Define your mask
+       const placeholderChar = "_"; // Placeholder for missing characters
 
       function enforceMask(inputValue) {
           let maskedValue = "";
           let valueIndex = 0;
 
           for (let i = 0; i < maskPattern.length; i++) {
-              if (valueIndex >= inputValue.length) break;
+              let currentMask = maskPattern[i];
+              let currentChar = inputValue[valueIndex] || ""; // Get next input character
 
-              let currentChar = inputValue[valueIndex];
-
-              if (maskPattern[i] === "@") {
-                  // Allow only letters
+              if (currentMask === "@") {
                   if (/[A-Za-z]/.test(currentChar)) {
                       maskedValue += currentChar.toUpperCase();
                       valueIndex++;
                   } else {
-                      continue; // Skip invalid input
+                      maskedValue += placeholderChar; // Keep length
                   }
-              } else if (maskPattern[i] === "#") {
-                  // Allow only numbers
+              } else if (currentMask === "#") {
                   if (/[0-9]/.test(currentChar)) {
                       maskedValue += currentChar;
                       valueIndex++;
                   } else {
-                      continue; // Skip invalid input
+                      maskedValue += placeholderChar; // Keep length
                   }
               } else {
-                  // Fixed characters in the mask (if any)
-                  maskedValue += maskPattern[i];
+                  maskedValue += currentMask; // Fixed mask character
               }
           }
 
