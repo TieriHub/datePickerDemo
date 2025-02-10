@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="//js.jotform.com/JotFormCustomWidget.min.js"></script>
+</head>
+<body>
+    <input type="text" name="toUpper" id="toUpper" style="text-transform: capitalize;">
+
+    <script type="text/javascript">
+        // Sottoscrizione all'evento "submit" per inviare il valore selezionato a JotForm
+        JFCustomWidget.subscribe("submit", function() {
+            let upperText = document.getElementById('toUpper').value;
+            JFCustomWidget.sendSubmit({ valid: true, value: upperText });
+          }
+        );
+      </script>
+    
+</body>
+</html>
