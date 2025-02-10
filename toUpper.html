@@ -52,15 +52,12 @@
         });
 
         JFCustomWidget.subscribe("ready", function() {
-            var defaultText = JFCustomWidget.getWidgetSetting('textInput');
-            if (defaultText) {
-                document.getElementById("textInput").value = applyMask(defaultText);
-            }
-        });
+               
+          document.getElementById("submitBtn").addEventListener("click", function() {
+          let text = document.getElementById("textInput").value;
+          JFCustomWidget.sendSubmit({ valid: true, value: text });
 
-        document.getElementById("submitBtn").addEventListener("click", function() {
-            let text = document.getElementById("textInput").value;
-            JFCustomWidget.sendSubmit({ valid: true, value: text });
+        });
         });
     </script>
     
