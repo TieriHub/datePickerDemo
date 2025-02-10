@@ -10,6 +10,8 @@
   
   <!-- Carica la libreria JotForm Custom Widget API -->
   <script src="//js.jotform.com/JotFormCustomWidget.js"></script>
+  <!-- Carica la libreria xlsx -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <style>
     /* Stili per distinguere giorni disponibili e non disponibili */
@@ -35,8 +37,7 @@
 <body>
 
   <div id="main">
-    <h3 id="header">huhuhu</h3>
-    <div id="casocaso"></div>
+    <h3>Seleziona una data</h3>
     <!-- Qui verrà visualizzato il Datepicker -->
     <div id="datepicker"></div>
     
@@ -49,29 +50,47 @@
              date1.getDate() === date2.getDate();
     }
     
+    function parseExcel(file, callback) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var data = new Uint8Array(e.target.result);
+        var workbook = XLSX.read(data, {type: 'array'});
+        var firstSheetName = workbook.SheetNames[0];
+        var worksheet = workbook.Sheets[firstSheetName];
+        var json = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+        callback(json);
+      };
+      reader.readAsArrayBuffer(file);
+    }
 
     // Sottoscrizione all'evento "ready" fornito dall'API di JotForm
     JFCustomWidget.subscribe("ready", function(formId, value) {
-      // Imposta il titolo: utilizza il parametro "QuestionLabel" se disponibile, altrimenti usa il valore predefinito
-      let label = JFCustomWidget.getWidgetSetting('QuestionLabel') || 'Seleziona una data per l\'appuntamento';
-      document.getElementById('header').innerHTML = label;
 
       JFCustomWidget.sendData({ type: string });
 
+      // Recupera il parametro "AllowedDates" come file .xlsx
+      let allowedDatesFile = JFCustomWidget.getWidgetSetting('AllowedDatesFile');
+      if (allowedDatesFile) {
+        fetch(allowedDatesFile)
+          .then(response => response.blob())
+          .then(blob => {
+            parseExcel(blob, function(data) {
+              let allowedDates = data.map(row => new Date(row[0]));
+              initializeDatepicker(allowedDates, value);
+            });
+          });
+      } else {
+        initializeDatepicker([], value);
+      }
+    });
 
-
-      // Recupera il parametro "AllowedDates" (atteso come stringa separata da virgole, nel formato yyyy-mm-dd)
-      let allowedDatesSetting = JFCustomWidget.getWidgetSetting('AllowedDates');
-      let allowedDates = allowedDatesSetting ? allowedDatesSetting.split(',').map(dateStr => new Date(dateStr.trim())) : [];
-      
+    function initializeDatepicker(allowedDates, preselectedValue) {
       // Inizializza il Datepicker di jQuery UI con il formato dd/mm/yy
       $("#datepicker").datepicker({
         dateFormat: 'dd/mm/yy',
         beforeShowDay: function(date) {
           // Verifica se la data corrente è tra quelle consentite
-          let allowedTrasform = new Date(allowedDatesSetting);
-          let allowed = isSameDate(date, allowedTrasform);
-
+          let allowed = allowedDates.some(allowedDate => isSameDate(date, allowedDate));
           if (allowed) {
             return [true, "available-day", "Disponibile"];
           }
@@ -83,18 +102,18 @@
       });
 
       // Se esiste un valore pre-esistente (ad esempio, in fase di modifica), lo pre-seleziona
-      if (value) {
+      if (preselectedValue) {
         try {
-          var preselectedDate = $.datepicker.parseDate('dd/mm/yy', value);
+          var preselectedDate = $.datepicker.parseDate('dd/mm/yy', preselectedValue);
           $("#datepicker").datepicker("setDate", preselectedDate);
         } catch (e) {
-          console.warn("Impossibile analizzare la data pre-selezionata:", value);
+          console.warn("Impossibile analizzare la data pre-selezionata:", preselectedValue);
         }
       }
 
       // (Opzionale) Ridimensiona l'iframe se necessario
       JFCustomWidget.requestFrameResize({ height: document.body.scrollHeight });
-    });
+    }
 
     // Sottoscrizione all'evento "submit" per inviare il valore selezionato a JotForm
     JFCustomWidget.subscribe("submit", function() {
