@@ -12,41 +12,9 @@
 
 
     <script type="text/javascript">
+
       JFCustomWidget.subscribe("ready", function(){
-        const maskPattern = "@@@@@@##@##@###@"; // Define your mask
 
-        function applyMask(value) {
-            let maskedValue = "";
-            let valueIndex = 0;
-
-            for (let i = 0; i < maskPattern.length; i++) {
-                if (valueIndex >= value.length) break;
-
-                if (maskPattern[i] === "@") {
-                    // Allow only letters
-                    while (valueIndex < value.length && !/[A-Za-z]/.test(value[valueIndex])) {
-                        valueIndex++;
-                    }
-                    if (valueIndex < value.length) {
-                        maskedValue += value[valueIndex].toUpperCase();
-                        valueIndex++;
-                    }
-                } else if (maskPattern[i] === "#") {
-                    // Allow only numbers
-                    while (valueIndex < value.length && !/[0-9]/.test(value[valueIndex])) {
-                        valueIndex++;
-                    }
-                    if (valueIndex < value.length) {
-                        maskedValue += value[valueIndex];
-                        valueIndex++;
-                    }
-                } else {
-                    // Fixed characters (if any in the pattern)
-                    maskedValue += maskPattern[i];
-                }
-            }
-            return maskedValue;
-        }
 
         document.getElementById("textInput").addEventListener("input", function() {
             this.value = applyMask(this.value);
