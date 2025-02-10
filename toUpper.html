@@ -14,41 +14,28 @@
     <script type="text/javascript">
 
        const maskPattern = "@@@@@@##@##@###@"; // Define your mask
-       const placeholderChar = "_"; // Placeholder for missing characters
 
-      function enforceMask(inputValue) {
-          let maskedValue = "";
-          let valueIndex = 0;
+       document.getElementById("textInput").addEventListener("input", function(event) {
+            let inputValue = this.value;
+            let lastIndex = inputValue.length - 1; // Get the last character index
 
-          for (let i = 0; i < maskPattern.length; i++) {
-              let currentMask = maskPattern[i];
-              let currentChar = inputValue[valueIndex] || ""; // Get next input character
+            if (lastIndex >= maskPattern.length) {
+                // Prevent input longer than mask
+                this.value = inputValue.substring(0, maskPattern.length);
+                return;
+            }
 
-              if (currentMask === "@") {
-                  if (/[A-Za-z]/.test(currentChar)) {
-                      maskedValue += currentChar.toUpperCase();
-                      valueIndex++;
-                  } else {
-                      maskedValue += placeholderChar; // Keep length
-                  }
-              } else if (currentMask === "#") {
-                  if (/[0-9]/.test(currentChar)) {
-                      maskedValue += currentChar;
-                      valueIndex++;
-                  } else {
-                      maskedValue += placeholderChar; // Keep length
-                  }
-              } else {
-                  maskedValue += currentMask; // Fixed mask character
-              }
-          }
+            let lastChar = inputValue.charAt(lastIndex);
+            let expectedType = maskPattern.charAt(lastIndex);
 
-          return maskedValue;
-      }
-
-      document.getElementById("textInput").addEventListener("input", function(event) {
-          let rawValue = this.value.replace(/[^A-Za-z0-9]/g, ''); // Remove any unwanted characters
-          this.value = enforceMask(rawValue);
+            // Validate last character
+            if ((expectedType === "@" && !/[A-Za-z]/.test(lastChar)) || 
+                (expectedType === "#" && !/[0-9]/.test(lastChar))) {
+                this.value = inputValue.substring(0, lastIndex); // Remove last invalid character
+            } else if (expectedType === "@") {
+                // Convert letters to uppercase
+                this.value = inputValue.substring(0, lastIndex) + lastChar.toUpperCase();
+            }
       });
 
       JFCustomWidget.subscribe("ready", function(){
