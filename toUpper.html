@@ -3,22 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>JotForm Custom Widget</title>
     <script src="//js.jotform.com/JotFormCustomWidget.min.js"></script>
 </head>
 <body>
 
-    <script type="text/javascript">
-        var text = ""; // Declare globally
+    <input type="text" id="textInput" placeholder="Inserisci Codice Fiscale" maxlength="15" />
 
-        JFCustomWidget.subscribe("ready", function(formId, value) {
-            text = JFCustomWidget.getWidgetSetting('textInput');
-            if (text) {
-                text = text.toUpperCase(); // Corrected method call
+
+    <script type="text/javascript">
+        const maskPattern = "@@@@@@##@##@###@"; // Define your mask
+
+        function applyMask(value) {
+            let maskedValue = "";
+            let valueIndex = 0;
+
+            for (let i = 0; i < maskPattern.length; i++) {
+                if (valueIndex >= value.length) break;
+
+                if (maskPattern[i] === "@") {
+                    // Allow only letters
+                    while (valueIndex < value.length && !/[A-Za-z]/.test(value[valueIndex])) {
+                        valueIndex++;
+                    }
+                    if (valueIndex < value.length) {
+                        maskedValue += value[valueIndex].toUpperCase();
+                        valueIndex++;
+                    }
+                } else if (maskPattern[i] === "#") {
+                    // Allow only numbers
+                    while (valueIndex < value.length && !/[0-9]/.test(value[valueIndex])) {
+                        valueIndex++;
+                    }
+                    if (valueIndex < value.length) {
+                        maskedValue += value[valueIndex];
+                        valueIndex++;
+                    }
+                } else {
+                    // Fixed characters (if any in the pattern)
+                    maskedValue += maskPattern[i];
+                }
+            }
+            return maskedValue;
+        }
+
+        document.getElementById("textInput").addEventListener("input", function() {
+            this.value = applyMask(this.value);
+        });
+
+        JFCustomWidget.subscribe("ready", function() {
+            var defaultText = JFCustomWidget.getWidgetSetting('textInput');
+            if (defaultText) {
+                document.getElementById("textInput").value = applyMask(defaultText);
             }
         });
 
-        JFCustomWidget.subscribe("submit", function() {
+        document.getElementById("submitBtn").addEventListener("click", function() {
+            let text = document.getElementById("textInput").value;
             JFCustomWidget.sendSubmit({ valid: true, value: text });
         });
     </script>
