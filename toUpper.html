@@ -15,11 +15,6 @@
 
       JFCustomWidget.subscribe("ready", function(){
 
-
-        document.getElementById("textInput").addEventListener("input", function() {
-            this.value = applyMask(this.value);
-        });
-
         JFCustomWidget.subscribe("submit", function() {
                
           let text = document.getElementById("textInput").value;
