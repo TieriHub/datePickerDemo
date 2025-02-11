@@ -55,6 +55,9 @@
       });
 
       JFCustomWidget.subscribe("ready", function(){
+       
+        let onLoadText = document.getElementById("textInput").value;
+        JFCustomWidget.sendData(onLoadText);
 
         JFCustomWidget.subscribe("submit", function() {
                
