@@ -29,7 +29,11 @@
 
     <script type="text/javascript">
 
-       const maskPattern = "@@@@@@##@##@###@"; // Define your mask
+       
+
+      JFCustomWidget.subscribe("ready", function(){
+
+        const maskPattern = "@@@@@@##@##@###@"; // Define your mask
 
        document.getElementById("textInput").addEventListener("input", function(event) {
             let inputValue = this.value;
@@ -53,8 +57,6 @@
                 this.value = inputValue.substring(0, lastIndex) + lastChar.toUpperCase();
             }
       });
-
-      JFCustomWidget.subscribe("ready", function(){
        
         let onLoadText = document.getElementById("textInput").value;
         JFCustomWidget.sendData(onLoadText);
