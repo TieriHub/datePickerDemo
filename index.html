@@ -68,21 +68,7 @@
 
       JFCustomWidget.sendData({ type: string });
 
-      // Recupera il parametro "AllowedDates" come file .xlsx
-      let allowedDatesFile = JFCustomWidget.getWidgetSetting('AllowedDatesFile');
-      if (allowedDatesFile) {
-        fetch(allowedDatesFile)
-          .then(response => response.blob())
-          .then(blob => {
-            parseExcel(blob, function(data) {
-              let allowedDates = data.map(row => new Date(row[0]));
-              initializeDatepicker(allowedDates, value);
-            });
-          });
-      } else {
-        initializeDatepicker([], value);
-      }
-    });
+  
 
     function initializeDatepicker(allowedDates, preselectedValue) {
       // Inizializza il Datepicker di jQuery UI con il formato dd/mm/yy
@@ -112,6 +98,22 @@
       }
 
     }
+
+        // Recupera il parametro "AllowedDates" come file .xlsx
+        let allowedDatesFile = JFCustomWidget.getWidgetSetting('AllowedDatesFile');
+      if (allowedDatesFile) {
+        fetch(allowedDatesFile)
+          .then(response => response.blob())
+          .then(blob => {
+            parseExcel(blob, function(data) {
+              let allowedDates = data.map(row => new Date(row[0]));
+              initializeDatepicker(allowedDates, value);
+            });
+          });
+      } else {
+        initializeDatepicker([], value);
+      }
+    });
 
     // Sottoscrizione all'evento "submit" per inviare il valore selezionato a JotForm
     JFCustomWidget.subscribe("submit", function() {
